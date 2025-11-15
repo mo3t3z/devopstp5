@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir('server') {
                     script {
-                        // Tag "latest" (tu peux aussi mettre le commit ID si tu veux)
+                        // Tag "latest" 
                         dockerImageServer = docker.build("${IMAGE_NAME_SERVER}:latest")
                     }
                 }
