@@ -124,6 +124,7 @@ pipeline {
             bat """
             for /f "tokens=3" %%i in ('docker images ^| findstr "mern-server" 2^>nul') do (docker rmi -f %%i 2>nul || echo "Failed to remove %%i")
             for /f "tokens=3" %%i in ('docker images ^| findstr "mern-client" 2^>nul') do (docker rmi -f %%i 2>nul || echo "Failed to remove %%i")
+            exit 0
             """
 
             echo "Nettoyage terminé."
