@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Build Server Image') {
             when {
-                changeset "Server/**"
+                changeset pattern: "Server/**"
             }
             steps {
                 dir('Server') {
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Build Client Image') {
             when {
-                changeset "Client/**"
+                changeset pattern: "Client/**"
             }
             steps {
                 dir('Client') {
@@ -48,7 +48,7 @@ pipeline {
 
         stage('Scan Server Image') {
             when {
-                changeset "Server/**"
+                changeset pattern: "Server/**"
             }
             steps {
                 script {
@@ -61,7 +61,7 @@ pipeline {
 
         stage('Scan Client Image') {
             when {
-                changeset "Client/**"
+                changeset pattern: "Client/**"
             }
             steps {
                 script {
@@ -74,7 +74,7 @@ pipeline {
 
         stage('Push Server Image to Docker Hub') {
             when {
-                changeset "Server/**"
+                changeset pattern: "Server/**"
             }
             steps {
                 script {
@@ -87,7 +87,7 @@ pipeline {
 
         stage('Push Client Image to Docker Hub') {
             when {
-                changeset "Client/**"
+                changeset pattern: "Client/**"
             }
             steps {
                 script {
