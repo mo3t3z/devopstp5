@@ -20,8 +20,11 @@ pipeline {
 
     stages {
         stage('Build Server Image') {
+            when {
+                changeset "Server/**"
+            }
             steps {
-                dir('server') {
+                dir('Server') {
                     script {
                         // Tag "latest" 
                         dockerImageServer = docker.build("${IMAGE_NAME_SERVER}:latest")
@@ -31,8 +34,11 @@ pipeline {
         }
 
         stage('Build Client Image') {
+            when {
+                changeset "Client/**"
+            }
             steps {
-                dir('client') {
+                dir('Client') {
                     script {
                         dockerImageClient = docker.build("${IMAGE_NAME_CLIENT}:latest")
                     }
@@ -41,6 +47,9 @@ pipeline {
         }
 
         stage('Scan Server Image') {
+            when {
+                changeset "Server/**"
+            }
             steps {
                 script {
                     bat """
@@ -51,6 +60,9 @@ pipeline {
         }
 
         stage('Scan Client Image') {
+            when {
+                changeset "Client/**"
+            }
             steps {
                 script {
                     bat """
@@ -60,15 +72,39 @@ pipeline {
             }
         }
 
-        stage('Push Images to Docker Hub') {
+        stage('Push Server Image to Docker Hub') {
+            when {
+                changeset "Server/**"
+            }
             steps {
                 script {
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS_ID) {
                         dockerImageServer.push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Push Client Image to Docker Hub') {
+            when {
+                changeset "Client/**"
+            }
+            steps {
+                script {
+                    docker.withRegistry('', DOCKERHUB_CREDENTIALS_ID) {
                         dockerImageClient.push('latest')
                     }
                 }
             }
         }
     }
-}
+
+    post {
+        always {
+            script {
+                bat """
+                docker system prune -f
+                """
+            }
+        }
+    }
