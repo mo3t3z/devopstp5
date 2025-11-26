@@ -16,12 +16,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         /******************************
          *      SERVER PIPELINE
          ******************************/
@@ -118,18 +112,18 @@ pipeline {
 
             // Supprimer conteneurs stoppés
             bat """
-            docker container prune -f
+            docker container prune -f || echo "No containers to prune"
             """
 
             // Supprimer images intermédiaires
             bat """
-            docker image prune -f
+            docker image prune -f || echo "No images to prune"
             """
 
             // Nettoyage images mern locales (Windows)
             bat """
-            for /f "tokens=3" %%i in ('docker images ^| findstr "mern-server"') do docker rmi -f %%i
-            for /f "tokens=3" %%i in ('docker images ^| findstr "mern-client"') do docker rmi -f %%i
+            for /f "tokens=3" %%i in ('docker images ^| findstr "mern-server" 2^>nul') do (docker rmi -f %%i 2>nul || echo "Failed to remove %%i")
+            for /f "tokens=3" %%i in ('docker images ^| findstr "mern-client" 2^>nul') do (docker rmi -f %%i 2>nul || echo "Failed to remove %%i")
             """
 
             echo "Nettoyage terminé."
