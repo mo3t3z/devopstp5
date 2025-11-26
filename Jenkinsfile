@@ -19,12 +19,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'Github_ssh', url: 'git@github.com:mo3t3z/devopstp5.git']]])
-            }
-        }
-
         stage('Build Server Image') {
             steps {
                 dir('server') {
