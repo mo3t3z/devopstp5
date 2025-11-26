@@ -98,13 +98,3 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            script {
-                bat """
-                docker system prune -f
-                """
-            }
-        }
-    }
